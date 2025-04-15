@@ -8,7 +8,7 @@ interface Auth0ProviderWithConfigProps {
 export const Auth0ProviderWithConfig = ({ children } : Auth0ProviderWithConfigProps) => {
     const domain = "dev-nv4345c1szg142mz.us.auth0.com";
     const clientId = "RjSqk3XLutH7jGJ2mdvyBRk7Jyjuo3vY";
-    const redirect_uri = "http://localhost:5173/todos";
+    const redirect_uri = "http://localhost:5173";
 
     return(
         <Auth0Provider
