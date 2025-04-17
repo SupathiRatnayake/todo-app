@@ -1,14 +1,11 @@
-import UserCard from "../features/auth/components/UserCard";
+import { Outlet } from "react-router-dom";
 
-function ProfilePage() {
-
-
-	return(
+const ProfilePage = () => {
+	return (
 		<>
 			<h1>Profile Page</h1>
-			<UserCard />
+			<Outlet />
 		</>
-	);
+	);	
 }
-
 export default ProfilePage;
