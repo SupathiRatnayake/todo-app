@@ -2,13 +2,17 @@ import LoginButton from "../../features/auth/components/LoginButton";
 import LogoutButton from "../../features/auth/components/LogoutButton";
 
 const Header = () => {
-    return (
-        <div>
-            This is header.
-            <LoginButton />
-            <LogoutButton />
-        </div>
-    );
+  return (
+    <header className="bg-white shadow-sm ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 bg-amber-500">
+        <h1 className="text-2xl font-bold text-gray-800 text-center sm:text-center ">
+          Todo App
+        </h1>
+        <LoginButton />
+        <LogoutButton />
+      </div>
+    </header>
+  );
 };
 
 export default Header;

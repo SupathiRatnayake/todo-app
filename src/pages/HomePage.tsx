@@ -9,14 +9,22 @@ function HomePage() {
 	const { user, isLoading: userLoading } = useUser();
 	const navigate = useNavigate();
 	
-	useEffect(() => {
-		if (authLoading || userLoading) return;
+	// console.log(`HomePage before useEffect(). User : ${user?.email}. AuthLoading : ${authLoading}. UserLoading ${userLoading}`);
 
-		if (isAuthenticated) {
+	
+	useEffect(() => {
+		
+		// console.log(`HomePage useEffect(). User : ${user?.email}. AuthLoading : ${authLoading}. UserLoading ${userLoading}`);
+
+		if (authLoading || userLoading) return;	// do nothing if authLoading or userLoading
+
+		if (isAuthenticated) {	// If authenticated redirect conditianally
+			// console.log(`User ${user?.email} arrived redeirect point.`);
+			
 			if (user) {
 				navigate('/profile');
-			} else {
-				navigate('/create-user');
+			} else {	// First time login
+				navigate('profile/create');
 			}
 		}
 	}, [authLoading, userLoading, isAuthenticated, user, navigate]);

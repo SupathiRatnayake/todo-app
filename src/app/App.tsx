@@ -5,30 +5,27 @@ import TodosPage from '../pages/TodosPage';
 import Layout from '../shared/components/Layout';
 import ProfilePage from '../pages/ProfilePage';
 import UserForm from '../features/auth/components/UserForm';
-import { Auth0Provider } from '@auth0/auth0-react';
 import { UserProvider } from '../features/auth/context/UserContext';
+import { Auth0ProviderWithConfig } from '../features/auth/services/auth0';
+import UserCard from '../features/auth/components/UserCard';
 
 function App() {
 
   return (
-	<Auth0Provider 
-		domain='dev-nv4345c1szg142mz.us.auth0.com'
-		clientId='RjSqk3XLutH7jGJ2mdvyBRk7Jyjuo3vY'
-		authorizationParams={{ redirect_uri: window.location.origin }}
-	>
+	<Auth0ProviderWithConfig>
 		<UserProvider>
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Layout />}>
 						<Route index element={<HomePage />} />
 						<Route path='todos' element={<TodosPage />} />	{/*protect */}
-						<Route path='profile' element={<ProfilePage />} />	{/*protect */}
-						<Route path='create-user' element={<UserForm />} />	{/*protect */}
+						<Route path='profile' element={<UserCard />} />	{/*protect */}
+						<Route path='profile/create' element={<UserForm />} />	{/*protect */}
 					</Route>
 				</Routes>
 			</BrowserRouter>
 		</UserProvider>
-	</Auth0Provider>
+	</Auth0ProviderWithConfig>
   );
 }
 
