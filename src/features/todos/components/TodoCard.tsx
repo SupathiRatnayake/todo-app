@@ -5,7 +5,7 @@ interface TodoProps {
   onEdit: (todo: TodoItem) => void;
 }
 
-function TodoCard(props: TodoProps) {
+function TodoCard(props: Readonly<TodoProps>) {
   const { todo, onEdit } = props;
 
   const handleEditClick = (taskToEdit: TodoItem) => {

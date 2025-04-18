@@ -8,11 +8,31 @@ interface TodoFormProps {
 }
 
 const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
-  const [task, setTask] = useState(initialTodo);
+  const [todo, setTodo] = useState(initialTodo);
+  const [errors, setErrors] = useState({
+    title: "",
+    due: "",
+  });
+
+  function validate(todo: TodoItem) {
+    const errors = { title: "", due: "" };
+    if (!todo.title) {
+      errors.title = "Title is reqired.";
+    }
+    if (!todo.due) {
+      errors.due = "Due is reqired.";
+    }
+    return errors;
+  }
+
+  function isValid() {
+    return errors.title === null && errors.due === null;
+  }
 
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    onSave(task);
+    // if (!isValid()) return;
+    onSave(todo);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,21 +42,19 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
     let updatedValue = type === "ckeckbox" ? checked : value;
 
     if (type === "date") {
-      // console.log(updatedValue);
-
       updatedValue = new Date(updatedValue);
-      // console.log(updatedValue);
     }
     const change = {
       [name]: updatedValue,
     };
 
-    let updatedTask: TodoItem;
+    let updatedTodo: TodoItem;
 
-    setTask((t) => {
-      updatedTask = new TodoItem({ ...t, ...change });
-      return updatedTask;
+    setTodo((t) => {
+      updatedTodo = new TodoItem({ ...t, ...change });
+      return updatedTodo;
     });
+    setErrors(() => validate(updatedTodo));
   };
 
   return (
@@ -57,9 +75,14 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
           id="title"
           placeholder="What is the task?"
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          value={task.title}
+          value={todo.title}
           onChange={handleChange}
         />
+        {errors.title === null && (
+          <div>
+            <p>{errors.title}</p>
+          </div>
+        )}
       </div>
 
       <div>
@@ -75,7 +98,7 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
           rows={3}
           placeholder="Enter description"
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          value={task.description}
+          value={todo.description}
           onChange={handleChange}
         ></textarea>
       </div>
@@ -93,14 +116,19 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
           id="due"
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           value={
-            task.due.getFullYear() +
+            todo.due.getFullYear() +
             "-" +
-            String(task.due.getMonth() + 1).padStart(2, "0") +
+            String(todo.due.getMonth() + 1).padStart(2, "0") +
             "-" +
-            String(task.due.getDate()).padStart(2, "0")
+            String(todo.due.getDate()).padStart(2, "0")
           }
           onChange={handleChange}
         />
+        {errors.due === null && (
+          <div>
+            <p>{errors.due}</p>
+          </div>
+        )}
       </div>
 
       <div>
@@ -114,7 +142,7 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
           type="checkbox"
           name="isComplete"
           id="status"
-          checked={task.isComplete}
+          checked={todo.isComplete}
           onChange={handleChange}
           className="w-1/6 px-3 py-2 border focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
