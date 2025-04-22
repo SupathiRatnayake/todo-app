@@ -17,7 +17,7 @@ export const useTodos = () => {
             if (!userLoading && user) {
                 setLoading(true);
                 try {
-                    const data = await getTodos();
+                    const data = await getTodos(user.id.toString());
                     if (currentPage === 1) {
                         setTodos(data);
                     } else {

@@ -22,7 +22,7 @@ function HomePage() {
 			// console.log(`User ${user?.email} arrived redeirect point.`);
 			
 			if (user) {
-				navigate('/profile');
+				navigate('/todos');
 			} else {	// First time login
 				navigate('profile/create');
 			}

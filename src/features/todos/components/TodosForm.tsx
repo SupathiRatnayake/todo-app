@@ -19,7 +19,7 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
     if (!todo.title) {
       errors.title = "Title is reqired.";
     }
-    if (!todo.due) {
+    if (!todo.dueDate) {
       errors.due = "Due is reqired.";
     }
     return errors;
@@ -35,7 +35,7 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
   const handleChange = (event: any) => {
     const { type, name, value, checked } = event.target;
 
-    let updatedValue = type === "ckeckbox" ? checked : value;
+    let updatedValue = type === "checkbox" ? checked : value;
 
     if (type === "date") {
       updatedValue = new Date(updatedValue);
@@ -101,22 +101,22 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
 
       <div>
         <label
-          htmlFor="due"
+          htmlFor="dueDate"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           Due Date
         </label>
         <input
           type="date"
-          name="due"
-          id="due"
+          name="dueDate"
+          id="dueDate"
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           value={
-            todo.due.getFullYear() +
+            todo.dueDate.getFullYear() +
             "-" +
-            String(todo.due.getMonth() + 1).padStart(2, "0") +
+            String(todo.dueDate.getMonth() + 1).padStart(2, "0") +
             "-" +
-            String(todo.due.getDate()).padStart(2, "0")
+            String(todo.dueDate.getDate()).padStart(2, "0")
           }
           onChange={handleChange}
         />
