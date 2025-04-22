@@ -25,13 +25,9 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
     return errors;
   }
 
-  function isValid() {
-    return errors.title === null && errors.due === null;
-  }
 
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    // if (!isValid()) return;
     onSave(todo);
   };
 
