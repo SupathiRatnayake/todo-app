@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { getTodos, upsertTodo} from "../../../api/todoApi";
 import { TodoItem } from "../models/TodoItem";
 import { useUser } from "../../auth/context/UserContext";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const useTodos = () => {
+    const {getAccessTokenSilently} = useAuth0();
     const { user, isLoading: userLoading } = useUser();
     const [todos, setTodos] = useState<TodoItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -17,7 +19,8 @@ export const useTodos = () => {
             if (!userLoading && user) {
                 setLoading(true);
                 try {
-                    const data = await getTodos(user.id.toString());
+                    const accessToken = await getAccessTokenSilently();
+                    const data = await getTodos(user.id.toString(), accessToken);
                     if (currentPage === 1) {
                         setTodos(data);
                     } else {
@@ -34,12 +37,13 @@ export const useTodos = () => {
             }
         };
         loadTodos();
-    }, [currentPage, setTodos, user, userLoading]);
+    }, [currentPage, getAccessTokenSilently, setTodos, user, userLoading]);
 
     const saveTodo = async (todo : TodoItem) => {
         setSaving(true);
         try {
-            const updatedTodo = await upsertTodo(todo);
+            const accessToken = await getAccessTokenSilently();
+            const updatedTodo = await upsertTodo(todo, accessToken);
             /**
              * todos.some((t: { id: Guid; }) => t.id === updatedTodo.id) Check if updatedTodo exist in todos
              * todos.map((t: { id: Guid; }) => t.id === updatedTodo.id ? new TodoItem(updatedTodo) : t) Replace todo with updatedTodo
@@ -48,6 +52,26 @@ export const useTodos = () => {
             const updatedTodos = todos.some((t: TodoItem) => t.id === updatedTodo.id)
             ? todos.map((t: TodoItem) => t.id === updatedTodo.id ? new TodoItem(updatedTodo) : t)
             : [...todos, new TodoItem(updatedTodo)];
+            setTodos(updatedTodos);
+        } catch (error) {
+            console.error('Failed to save Todo', error);
+            if (error instanceof Error) {
+                setSavingError(error.message);
+            }
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const deleteTodo = async (todo : TodoItem) => {
+        setSaving(true);
+        try {
+            const updatedTodo = await upsertTodo({
+                ...todo,
+                isDeleted: true,
+            }, (await getAccessTokenSilently()).toString());
+            // Remove the deeted todoItem from list
+            const updatedTodos = todos.filter(t => t.id !== updatedTodo.id);
             setTodos(updatedTodos);
         } catch (error) {
             console.error('Failed to save Todo', error);
@@ -68,5 +92,6 @@ export const useTodos = () => {
         saving,
         savingError,
         saveTodo,
+        deleteTodo,
     };
 }

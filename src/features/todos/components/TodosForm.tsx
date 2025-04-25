@@ -11,22 +11,29 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
   const [todo, setTodo] = useState(initialTodo);
   const [errors, setErrors] = useState({
     title: "",
-    due: "",
+    dueDate: "",
   });
 
   function validate(todo: TodoItem) {
-    const errors = { title: "", due: "" };
+    const errors = { title: "", dueDate: "" };
     if (!todo.title) {
       errors.title = "Title is reqired.";
     }
     if (!todo.dueDate) {
-      errors.due = "Due is reqired.";
+      errors.dueDate = "Due date is reqired.";
     }
     return errors;
   }
 
+  function isValid() {
+    return (
+      errors.title.length === 0 &&
+      errors.dueDate.length === 0
+    );
+  }
 
   const handleSubmit = (event: SyntheticEvent) => {
+    if (!isValid()) return;
     event.preventDefault();
     onSave(todo);
   };
@@ -74,8 +81,8 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
           value={todo.title}
           onChange={handleChange}
         />
-        {errors.title === null && (
-          <div>
+        {errors.title !== null && (
+          <div className="block text-sm font-medium text-red-700 mb-1">
             <p>{errors.title}</p>
           </div>
         )}
@@ -120,9 +127,9 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
           }
           onChange={handleChange}
         />
-        {errors.due === null && (
-          <div>
-            <p>{errors.due}</p>
+        {errors.dueDate !== null && (
+          <div className="block text-sm font-medium text-red-700 mb-1">
+            <p>{errors.dueDate}</p>
           </div>
         )}
       </div>

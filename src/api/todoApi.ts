@@ -9,10 +9,13 @@ const API_BASE_URL = 'https://localhost:7042/api/Todo'; // Configure later with 
  * @param token Access token from Auth0
  * @returns Todos list from backend
  */
-export async function getTodos(userId : string): Promise<TodoItem[]> {
+export async function getTodos(userId : string, accessToken: string): Promise<TodoItem[]> {
     const response = await axios.get(`${API_BASE_URL}`, {
         params: {
             userId: userId,
+        },
+        headers : {
+            Authorization: `Bearer ${accessToken}`,
         }
     });
     
@@ -25,9 +28,10 @@ export async function getTodos(userId : string): Promise<TodoItem[]> {
  * @param token Access token from Auth0
  * @returns Todos list from backend
  */
-export async function upsertTodo(todoItem: TodoItem): Promise<TodoItem> {
+export async function upsertTodo(todoItem: TodoItem, accessToken: string): Promise<TodoItem> {
     const {id, title, description, dueDate, isComplete, isDeleted, ownerId} = todoItem;
-    const response = await axios.post(`${API_BASE_URL}`, {
+    const response = await axios.post(`${API_BASE_URL}`, 
+        {
         "id" : id.toString(),
         "title" : title,
         "description" : description, 
@@ -36,11 +40,11 @@ export async function upsertTodo(todoItem: TodoItem): Promise<TodoItem> {
         "isDeleted" : isDeleted,
         "ownerId" : ownerId.toString(),
     },{
-        // headers: 
-        // { 
-        //     Authorization: `Bearer ${token}`,
-        //     'Content-Type': 'application/json',
-        // },
+        headers: 
+        { 
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        },
     });
     
     return response.data.data;   // Data has nested data json, but has issue accessing

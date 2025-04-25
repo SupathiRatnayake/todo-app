@@ -9,6 +9,7 @@ export const Auth0ProviderWithConfig = ({ children } : Auth0ProviderWithConfigPr
     const domain = "dev-nv4345c1szg142mz.us.auth0.com";
     const clientId = "RjSqk3XLutH7jGJ2mdvyBRk7Jyjuo3vY";
     const redirect_uri = "http://localhost:5173";
+    const audience = "https://todoapp.com/api";
 
     return(
         <Auth0Provider
@@ -16,6 +17,7 @@ export const Auth0ProviderWithConfig = ({ children } : Auth0ProviderWithConfigPr
             clientId= {clientId}
             authorizationParams= {{
                 redirect_uri: redirect_uri,
+                audience: audience,
             }}
         >
             {children}

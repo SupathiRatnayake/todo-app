@@ -6,9 +6,10 @@ import TodoForm from "./TodosForm";
 type TodoListProps = {
 	todos: TodoItem[];
 	onSave: (todo: TodoItem) => void;
+	onDelete: (todo: TodoItem) => void;
 }
 
-const TodoList = ({ todos, onSave }: TodoListProps) => {
+const TodoList = ({ todos, onSave, onDelete }: TodoListProps) => {
 
 	const [todoBeignEdited, setTodoBeignEdited] = useState({});
 
@@ -20,9 +21,11 @@ const TodoList = ({ todos, onSave }: TodoListProps) => {
 		setTodoBeignEdited({});
 	};
 
+
+
 	const items = todos.map((todo) => (
 		<div key={todo.id.toString()} className="transition-transform duration-200 hover:scale-[1.02]">
-			{todo === todoBeignEdited? (<TodoForm todo={todo} onSave={onSave} onCancel={cancelEditing} />) : (<TodoCard todo={todo} onEdit={handleEdit} />)}
+			{todo === todoBeignEdited? (<TodoForm todo={todo} onSave={onSave} onCancel={cancelEditing} />) : (<TodoCard todo={todo} onEdit={handleEdit} onDelete={onDelete} />)}
 		</div>
     ));
 
@@ -31,7 +34,7 @@ const TodoList = ({ todos, onSave }: TodoListProps) => {
 	}
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6">
           {items}
         </div>
 	);

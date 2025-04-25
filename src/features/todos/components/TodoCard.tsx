@@ -3,23 +3,27 @@ import { TodoItem } from "../models/TodoItem";
 interface TodoProps {
   todo: TodoItem;
   onEdit: (todo: TodoItem) => void;
+  onDelete: (todo: TodoItem) => void;
 }
 
 function TodoCard(props: Readonly<TodoProps>) {
-  const { todo, onEdit } = props;
+  const { todo, onEdit, onDelete } = props;
 
-  const handleEditClick = (taskToEdit: TodoItem) => {
-    onEdit(taskToEdit);
+  const handleEditClick = (itemToEdit: TodoItem) => {
+    onEdit(itemToEdit);
   };
 
-  const handleDeleteClick = (taskToEdit: TodoItem) => {
-    console.log(taskToEdit.id);
+  const handleDeleteClick = (itemToDelete: TodoItem) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this Todo?");
+    if (!confirmDelete) return;
+    onDelete(itemToDelete)
+
   };
 
   return (
-    <div className="max-w-md w-full bg-white rounded-lg shadow-md overflow-hidden mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
+    <div className="max-w-lg w-full bg-white rounded-lg shadow-md overflow-hidden mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
       {/* Card Header */}
-      <div className="p-5 pb-2 flex justify-between items-start">
+      <div className="p-5 pb-2 flex-col justify-between items-start">
         <div className="flex-1">
           <h2 className="text-xl font-semibold text-gray-800 truncate">
             {todo.title}

@@ -6,18 +6,21 @@ import TodoForm from "../features/todos/components/TodosForm";
 import { useTodos } from "../features/todos/hooks/todoHooks";
 
 const TodosPage = () => {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
+  console.log("Main loading state " , isLoading);
+  
   const [selectedTodo, setSelectedTodo] = useState<TodoItem | null>(null);
   const {
     todos,
     loading,
     error,
     saveTodo,
+    deleteTodo,
   } = useTodos();
 
 
   const handleAddNew = () => {
-    setSelectedTodo(new TodoItem({ ownerId: user?.id})); // empty todo
+    setSelectedTodo(new TodoItem({ ownerId: user?.id})); // empty TodoItem
   };
 
   const handleCancel = () => {
@@ -26,6 +29,11 @@ const TodosPage = () => {
 
   const handleSave = async (todo: TodoItem) => {
     await saveTodo(todo);
+    setSelectedTodo(null); // close form
+  };
+
+  const handleDelete = async (todo: TodoItem) => {
+    await deleteTodo(todo);
     setSelectedTodo(null); // close form
   };
 
@@ -74,7 +82,7 @@ const TodosPage = () => {
             <TodoForm todo={selectedTodo} onSave={handleSave} onCancel={handleCancel} />
           </div>
         )}
-        <TodosList onSave={saveTodo} todos={todos} />
+        <TodosList onSave={saveTodo} todos={todos} onDelete={handleDelete} />
         {loading && (
           <div>
             <span className="animate-spin"></span>
