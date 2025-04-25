@@ -23,10 +23,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        
-		// console.log(`HomePage useEffect(). User : ${user?.email}`);
-
+    useEffect(() => {		
         const loadUser = async() => {
             if (isAuthenticated && auth0User?.email) {
                 try {
@@ -35,11 +32,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     setUser(backendUser);
                     setIsLoading(false);
 
-            		// console.log(`Backend user ${backendUser.email} is assigned to user ${user?.email}`);
-
                 } catch (error) {
                     console.error('Failed to load user from backend.', error);
                 }
+            } else {
+                setIsLoading(false);
             }
         };
         
@@ -51,7 +48,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <UserContext.Provider value={obj}>
-            {children}
+            {isLoading ? <p>Loading...</p> : children}
         </UserContext.Provider>
     );
 };
