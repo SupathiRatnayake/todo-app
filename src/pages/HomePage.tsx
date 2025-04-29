@@ -14,7 +14,7 @@ function HomePage() {
 		if (authLoading || userLoading) return;	// do nothing if authLoading or userLoading
 
 		if (isAuthenticated) {	// If authenticated redirect conditianally
-			// console.log(`User ${user?.email} arrived redeirect point.`);
+			console.log(user, userLoading);
 			
 			if (user) {
 				navigate('/todos');
