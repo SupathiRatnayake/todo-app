@@ -10,6 +10,8 @@ const TodosPage = () => {
   console.log("Main loading state " , isLoading);
   
   const [selectedTodo, setSelectedTodo] = useState<TodoItem | null>(null);
+  const [todoToDelete, setTodoToDelete] = useState<TodoItem | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const {
     todos,
     loading,
@@ -20,7 +22,7 @@ const TodosPage = () => {
 
 
   const handleAddNew = () => {
-    setSelectedTodo(new TodoItem({ ownerId: user?.id})); // empty TodoItem
+    setSelectedTodo(new TodoItem({ ownerId: user?.id })); // empty TodoItem
   };
 
   const handleCancel = () => {
@@ -32,13 +34,34 @@ const TodosPage = () => {
     setSelectedTodo(null); // close form
   };
 
-  const handleDelete = async (todo: TodoItem) => {
-    await deleteTodo(todo);
-    setSelectedTodo(null); // close form
+  const confirmDelete = async () => {
+    if (todoToDelete) {
+      await deleteTodo(todoToDelete);
+    }
+    setTodoToDelete(null);
+    setIsConfirmOpen(false);
+  };
+
+  const requestDelete = async (todo: TodoItem) => {
+    setTodoToDelete(todo);
+    setIsConfirmOpen(true);
+  };
+
+  const cancelDelete = () => {
+    setIsConfirmOpen(false);
+    setTodoToDelete(null);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <ConfirmDialog
+        isOpen={isConfirmOpen}
+        title="Confirm Delete"
+        message={`Are you sure you want to delete "${todoToDelete?.title}"?`}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
+
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="mb-8 text-center sm:text-left">
@@ -58,7 +81,8 @@ const TodosPage = () => {
           <div className="flex space-x-4">
             <button 
             onClick={handleAddNew}
-            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+            >
               Add New Task
             </button>
             <button className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50 transition-colors">
@@ -79,10 +103,31 @@ const TodosPage = () => {
         )}
         {selectedTodo && (
           <div>
-            <TodoForm todo={selectedTodo} onSave={handleSave} onCancel={handleCancel} />
+            <TodoForm
+              todo={selectedTodo}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
           </div>
         )}
-        <TodosList onSave={saveTodo} todos={todos} onDelete={handleDelete} />
+        <TodosList onSave={saveTodo} todos={todos} onDelete={requestDelete} />
+        <div>
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
+            Prev
+          </button>
+          <span>
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
+            Next
+          </button>
+        </div>
         {loading && (
           <div>
             <span className="animate-spin"></span>

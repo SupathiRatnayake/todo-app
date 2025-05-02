@@ -14,10 +14,7 @@ function TodoCard(props: Readonly<TodoProps>) {
   };
 
   const handleDeleteClick = (itemToDelete: TodoItem) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this Todo?");
-    if (!confirmDelete) return;
     onDelete(itemToDelete)
-
   };
 
   return (

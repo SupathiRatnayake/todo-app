@@ -51,13 +51,16 @@ export const useTodos = () => {
              */
             const updatedTodos = todos.some((t: TodoItem) => t.id === updatedTodo.id)
             ? todos.map((t: TodoItem) => t.id === updatedTodo.id ? new TodoItem(updatedTodo) : t)
-            : [...todos, new TodoItem(updatedTodo)];
+            : [new TodoItem(updatedTodo), ...todos];
             setTodos(updatedTodos);
+            toast.success(todo.id ? 'Todo updated successfully!' : 'Todo crerated successfully');
+
         } catch (error) {
             console.error('Failed to save Todo', error);
             if (error instanceof Error) {
                 setSavingError(error.message);
             }
+            toast.error('Failed to save Todo!');
         } finally {
             setSaving(false);
         }
@@ -73,11 +76,15 @@ export const useTodos = () => {
             // Remove the deeted todoItem from list
             const updatedTodos = todos.filter(t => t.id !== updatedTodo.id);
             setTodos(updatedTodos);
+            toast.success('Todo deleted successfully');
+
         } catch (error) {
             console.error('Failed to save Todo', error);
             if (error instanceof Error) {
                 setSavingError(error.message);
             }
+            toast.error('Failed to delete Todo!');
+
         } finally {
             setSaving(false);
         }
