@@ -4,18 +4,18 @@ import { TodoItem } from "../models/TodoItem";
 import { useUser } from "../../auth/context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "react-toastify";
+import { MOCK_TODOS } from "../../../tests/MOCK_DATA";
 
 export const useTodos = () => {
     const {getAccessTokenSilently} = useAuth0();
     const { user, isLoading: userLoading } = useUser();
-    const [todos, setTodos] = useState<TodoItem[]>([]);
+    const [todos, setTodos] = useState<TodoItem[]>(MOCK_TODOS);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>(undefined);
     const [saving, setSaving] = useState(false);
     const [savingError, setSavingError] = useState<string | undefined>(undefined);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
-    const pageSize = 9;
 
     useEffect(() => {
         const loadTodos = async () => {
