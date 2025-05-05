@@ -3,6 +3,7 @@ import { getTodos, upsertTodo} from "../../../api/todoApi";
 import { TodoItem } from "../models/TodoItem";
 import { useUser } from "../../auth/context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
+import { toast } from "react-toastify";
 
 export const useTodos = () => {
     const {getAccessTokenSilently} = useAuth0();
@@ -10,9 +11,11 @@ export const useTodos = () => {
     const [todos, setTodos] = useState<TodoItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>(undefined);
-    const [currentPage, setCurrentPage] = useState(1);
     const [saving, setSaving] = useState(false);
     const [savingError, setSavingError] = useState<string | undefined>(undefined);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCount, setTotalCount] = useState(0);
+    const pageSize = 9;
 
     useEffect(() => {
         const loadTodos = async () => {
@@ -21,10 +24,12 @@ export const useTodos = () => {
                 try {
                     const accessToken = await getAccessTokenSilently();
                     const data = await getTodos(user.id.toString(), accessToken);
+                    setTotalCount(data.totalCount);
+                    const items = data.items.map((item: unknown) => new TodoItem(item))
                     if (currentPage === 1) {
-                        setTodos(data);
+                        setTodos(items);
                     } else {
-                        setTodos((todos) => [...todos, ...data]);
+                        setTodos((todos) => [...todos, ...items]);
                     }
                     setError(undefined);
                 } catch (error) {
@@ -100,5 +105,6 @@ export const useTodos = () => {
         savingError,
         saveTodo,
         deleteTodo,
+        totalCount,
     };
 }

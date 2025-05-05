@@ -1,5 +1,6 @@
 import axios from "axios";
 import { TodoItem } from "../features/todos/models/TodoItem";
+import { PagedResult } from "../features/todos/models/PagedResult";
 
 const API_BASE_URL = 'https://localhost:7042/api/Todo'; // Configure later with env
 
@@ -9,7 +10,7 @@ const API_BASE_URL = 'https://localhost:7042/api/Todo'; // Configure later with 
  * @param token Access token from Auth0
  * @returns Todos list from backend
  */
-export async function getTodos(userId : string, accessToken: string): Promise<TodoItem[]> {
+export async function getTodos(userId : string, accessToken: string): Promise<PagedResult<TodoItem>> {
     const response = await axios.get(`${API_BASE_URL}`, {
         params: {
             userId: userId,
@@ -19,7 +20,7 @@ export async function getTodos(userId : string, accessToken: string): Promise<To
         }
     });
     
-    return response.data.data.map((item: unknown) => new TodoItem(item)); 
+    return response.data.data; 
 }
 
 /**

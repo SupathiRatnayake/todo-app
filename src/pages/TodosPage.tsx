@@ -4,6 +4,7 @@ import { useUser } from "../features/auth/context/UserContext";
 import TodosList from "../features/todos/components/TodosList";
 import TodoForm from "../features/todos/components/TodosForm";
 import { useTodos } from "../features/todos/hooks/todoHooks";
+import ConfirmDialog from "../features/todos/components/ConfirmDialog";
 
 const TodosPage = () => {
   const { user, isLoading } = useUser();
@@ -18,6 +19,7 @@ const TodosPage = () => {
     error,
     saveTodo,
     deleteTodo,
+    totalCount,
   } = useTodos();
 
 
@@ -75,7 +77,7 @@ const TodosPage = () => {
               Total Tasks:
             </span>
             <span className="text-lg font-semibold text-blue-600">
-              {todos.length}
+              {totalCount}
             </span>
           </div>
           <div className="flex space-x-4">
@@ -111,23 +113,6 @@ const TodosPage = () => {
           </div>
         )}
         <TodosList onSave={saveTodo} todos={todos} onDelete={requestDelete} />
-        <div>
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => p - 1)}
-          >
-            Prev
-          </button>
-          <span>
-            {currentPage} / {totalPages}
-          </span>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((p) => p + 1)}
-          >
-            Next
-          </button>
-        </div>
         {loading && (
           <div>
             <span className="animate-spin"></span>

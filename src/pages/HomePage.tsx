@@ -19,7 +19,7 @@ function HomePage() {
 			if (user) {
 				navigate('/todos');
 			} else {	// First time login
-				navigate('profile/create');
+				navigate('/profile/create');
 			}
 		}
 	}, [authLoading, userLoading, isAuthenticated, user, navigate]);
