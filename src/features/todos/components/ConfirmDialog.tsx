@@ -34,10 +34,10 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel } : Confirm
                         </Description>
                         <div className="mt-4 flex justify-end space-x-2">
                             <button onClick={onCancel} className="px-4 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-100">
-                                Cancel
+                                No
                             </button>
                             <button onClick={onConfirm} className="px-4 py-2 text-sm rounded-md bg-red-600 text-white hover:bg-red-700">
-                                Delete
+                                Yes
                             </button>
                         </div>
                     </DialogPanel>

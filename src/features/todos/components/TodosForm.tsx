@@ -1,18 +1,31 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TodoItem } from "../models/TodoItem";
+import { useTodos } from "../hooks/todoHooks";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+} from "@mui/material";
+import ConfirmDialog from "./ConfirmDialog";
 
 interface TodoFormProps {
   todo: TodoItem;
-  onSave: (todo: TodoItem) => void;
-  onCancel: () => void;
 }
 
-const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
+const TodoForm = ({ todo: initialTodo }: TodoFormProps) => {
   const [todo, setTodo] = useState(initialTodo);
   const [errors, setErrors] = useState({
     title: "",
     dueDate: "",
   });
+  const { saveTodo } = useTodos();
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => console.log(todo));
 
   function validate(todo: TodoItem) {
     const errors = { title: "", dueDate: "" };
@@ -26,17 +39,18 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
   }
 
   function isValid() {
-    return (
-      errors.title.length === 0 &&
-      errors.dueDate.length === 0
-    );
+    return errors.title.length === 0 && errors.dueDate.length === 0;
   }
 
   const handleSubmit = (event: SyntheticEvent) => {
     if (!isValid()) return;
     event.preventDefault();
-    onSave(todo);
+    saveTodo(todo);
+    navigate(-1);
   };
+
+  const handleCancel = () => setIsConfirmOpen(true);
+  const cancelEdit = () => navigate(-1);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
@@ -61,63 +75,34 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
   };
 
   return (
-    <form
-      className="bg-white rounded-lg shadow-md p-6 space-y-4 max-w-md mx-auto"
-      onSubmit={handleSubmit}
-    >
-      <div>
-        <label
-          htmlFor="title"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Title
-        </label>
-        <input
-          type="text"
+    <>
+      <ConfirmDialog
+        isOpen={isConfirmOpen}
+        title="Cancel Edits"
+        message={`Are you sure you want to cancel changes?`}
+        onConfirm={cancelEdit}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
+          required
           name="title"
-          id="title"
-          placeholder="What is the task?"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          label="Title"
+          variant="standard"
           value={todo.title}
           onChange={handleChange}
+          fullWidth
+          multiline
         />
-        {errors.title !== null && (
-          <div className="block text-sm font-medium text-red-700 mb-1">
-            <p>{errors.title}</p>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Description
-        </label>
-        <textarea
-          name="description"
-          id="description"
-          rows={3}
-          placeholder="Enter description"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          value={todo.description}
-          onChange={handleChange}
-        ></textarea>
-      </div>
-
-      <div>
-        <label
-          htmlFor="dueDate"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Due Date
-        </label>
-        <input
-          type="date"
+        <TextField
           name="dueDate"
-          id="dueDate"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          label="Due Date"
+          type="date"
+          variant="standard"
           value={
             todo.dueDate.getFullYear() +
             "-" +
@@ -126,47 +111,46 @@ const TodoForm = ({ todo: initialTodo, onSave, onCancel }: TodoFormProps) => {
             String(todo.dueDate.getDate()).padStart(2, "0")
           }
           onChange={handleChange}
+          fullWidth
         />
-        {errors.dueDate !== null && (
-          <div className="block text-sm font-medium text-red-700 mb-1">
-            <p>{errors.dueDate}</p>
-          </div>
-        )}
-      </div>
-
-      <div>
-        <label
-          htmlFor="status"
-          className="text-sm font-medium text-gray-700 mb-1"
-        >
-          Completed?
-        </label>
-        <input
-          type="checkbox"
-          name="isComplete"
-          id="status"
-          checked={todo.isComplete}
+        <TextField
+          name="description"
+          label="Description"
+          variant="standard"
+          value={todo.description}
           onChange={handleChange}
-          className="w-1/6 px-3 py-2 border focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          fullWidth
+          multiline
         />
-      </div>
-
-      <div className="flex justify-end space-x-3 pt-2">
-        <button
-          type="button"
-          className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          onClick={onCancel}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Save Task
-        </button>
-      </div>
-    </form>
+        <FormControlLabel
+          label="Completed?"
+          control={
+            <Checkbox
+              name="isComplete"
+              checked={todo.isComplete}
+              onChange={handleChange}
+            />
+          }
+        />
+        <div className="px-5 py-3 bg-gray-50 flex justify-between space-x-2">
+          <Button
+            onClick={handleCancel}
+            variant="contained"
+            color="error"
+            sx={{ alignSelf: "flex-end" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ alignSelf: "flex-end" }}
+          >
+            Save Changes
+          </Button>
+        </div>
+      </Box>
+    </>
   );
 };
 

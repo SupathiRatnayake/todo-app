@@ -9,6 +9,8 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
+import logo from "../../public/todo logo.png";
+import LoginButton from "../features/auth/components/LoginButton";
 
 const HomePage = () => {
   const {
@@ -27,7 +29,7 @@ const HomePage = () => {
       console.log(user, userLoading);
 
       if (user) {
-        navigate("/todos");
+        navigate("/app/todos");
       } else {
         // First time login
         navigate("/profile/create");
@@ -39,15 +41,24 @@ const HomePage = () => {
     return (
       <Container maxWidth="sm" sx={{ mt: 20, textAlign: "center" }}>
         <CircularProgress />
-        <Typography variant="body1" mt={2}>
-          Loading...
-        </Typography>
       </Container>
     );
   }
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="xl">
+      <header className="w-full bg-white text-white py-1 shadow-md">
+        <div className="px-4 py-0 flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center space-x-2">
+            <img src={logo} alt="Todo App" className="h-8 w-auto" />
+          </div>
+          {/* Login/Logout buttons */}
+          <div className="flex items-center space-x-4">
+            <LoginButton />
+          </div>
+        </div>
+      </header>
       <Box
         display="flex"
         flexDirection="column"
@@ -67,7 +78,10 @@ const HomePage = () => {
             color="primary"
             size="large"
             onClick={() => loginWithRedirect()}
-            sx={{ mt: 4 }}
+            sx={{ 
+              mt: 4, 
+              width: "34vw"
+            }}
           >
             Get Started
           </Button>

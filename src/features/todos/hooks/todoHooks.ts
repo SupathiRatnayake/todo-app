@@ -4,12 +4,12 @@ import { TodoItem } from "../models/TodoItem";
 import { useUser } from "../../auth/context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "react-toastify";
-import { MOCK_TODOS } from "../../../tests/MOCK_DATA";
+
 
 export const useTodos = () => {
     const {getAccessTokenSilently} = useAuth0();
     const { user, isLoading: userLoading } = useUser();
-    const [todos, setTodos] = useState<TodoItem[]>(MOCK_TODOS);
+    const [todos, setTodos] = useState<TodoItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>(undefined);
     const [saving, setSaving] = useState(false);
@@ -46,6 +46,8 @@ export const useTodos = () => {
 
     const saveTodo = async (todo : TodoItem) => {
         setSaving(true);
+        if (!user) return;
+        todo.ownerId = user.id;
         try {
             const accessToken = await getAccessTokenSilently();
             const updatedTodo = await upsertTodo(todo, accessToken);
@@ -64,6 +66,9 @@ export const useTodos = () => {
             console.error('Failed to save Todo', error);
             if (error instanceof Error) {
                 setSavingError(error.message);
+                console.error(error.message);
+                
+                
             }
             toast.error('Failed to save Todo!');
         } finally {

@@ -1,32 +1,29 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@mui/material";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 const LogoutButton = () => {
-    const { logout, isAuthenticated } = useAuth0();
+  const { logout } = useAuth0();
 
-    return (
-        isAuthenticated && (
-        <Button
-            variant="outlined"
-            color="inherit"
-            size="small"
-            onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
-            sx={{
-                px: 3,
-                py: 1,
-                borderRadius: '2vw',
-                backgroundColor: 'rgba(0, 0, 0, 1)',
-                borderColor: 'white',
-                '&:hover': {
-                    backgroundColor: 'rgba(90, 90, 90, 1)'
-                }
-            }}
-        >
-            Log out
-        </Button>)
-      );
-}
+  return (
+    <Button
+      onClick={() =>
+        logout({ logoutParams: { returnTo: window.location.origin } })
+      }
+      startIcon={<LogoutIcon />}
+      fullWidth
+      variant="text"
+      sx={{
+        justifyContent: "flex-start",
+        color: "black",
+        px: 2,
+        py: 2,
+      }}
+    >
+      Logout
+    </Button>
+  );
+};
 
 export default LogoutButton;
-

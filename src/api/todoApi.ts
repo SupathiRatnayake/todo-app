@@ -25,6 +25,25 @@ export async function getTodos(userId : string, accessToken: string): Promise<Pa
 
 /**
  * Fetch todos from backend using userId.
+ * @param todoId Id of the todoItem
+ * @param token Access token from Auth0
+ * @returns Todos list from backend
+ */
+export async function getTodoById(todoId: string, accessToken: string): Promise<TodoItem> {
+    const response = await axios.get(`${API_BASE_URL}/${todoId}`, {
+        params: {
+            todoId: todoId,
+        },
+        headers : {
+            Authorization: `Bearer ${accessToken}`,
+        }
+    });
+    
+    return response.data.data; 
+}
+
+/**
+ * Creates or Updates TodoItem in the backend database.
  * @param todoItem todoItem to save.
  * @param token Access token from Auth0
  * @returns Todos list from backend

@@ -1,31 +1,18 @@
-import { useState } from "react";
 import { TodoItem } from "../models/TodoItem";
-import TodoCard from "./TodoCard";
-import TodoForm from "./TodosForm";
+import TodoListItem from "./TodoListItem";
+import { Stack } from "@mui/material";
 
 type TodoListProps = {
 	todos: TodoItem[];
-	onSave: (todo: TodoItem) => void;
+	onEdit: (id: string) => void;
 	onDelete: (todo: TodoItem) => void;
 }
 
-const TodoList = ({ todos, onSave, onDelete }: TodoListProps) => {
-
-	const [todoBeignEdited, setTodoBeignEdited] = useState({});
-
-	const handleEdit = (todo: TodoItem) => {
-		setTodoBeignEdited(todo);
-	};
-
-	const cancelEditing = () => {
-		setTodoBeignEdited({});
-	};
-
-
+const TodoList = ({ todos, onEdit, onDelete}: TodoListProps) => {
 
 	const items = todos.map((todo) => (
 		<div key={todo.id.toString()} className="transition-transform duration-200 hover:scale-[1.02]">
-			{todo === todoBeignEdited? (<TodoForm todo={todo} onSave={onSave} onCancel={cancelEditing} />) : (<TodoCard todo={todo} onEdit={handleEdit} onDelete={onDelete} />)}
+			<TodoListItem todo={todo} onEdit={() => onEdit(todo.id.toString())} onDelete={() => onDelete(todo)} />
 		</div>
     ));
 
@@ -34,9 +21,9 @@ const TodoList = ({ todos, onSave, onDelete }: TodoListProps) => {
 	}
 
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 p-6">
-          {items}
-        </div>
+		<Stack sx={{py:2}}>
+			{items}
+		</Stack>
 	);
 };
 

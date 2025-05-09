@@ -1,41 +1,22 @@
+import TodosList from "../features/todos/components/TodosList";
+import { useTodos } from "../features/todos/hooks/todoHooks";
+import { Box, Button, Typography } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import TodoFilterPanel from "../features/todos/components/TodoFilterPanel";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TodoItem } from "../features/todos/models/TodoItem";
-import { useUser } from "../features/auth/context/UserContext";
-import TodosList from "../features/todos/components/TodosList";
-import TodoForm from "../features/todos/components/TodosForm";
-import { useTodos } from "../features/todos/hooks/todoHooks";
 import ConfirmDialog from "../features/todos/components/ConfirmDialog";
 
 const TodosPage = () => {
-  const { user, isLoading } = useUser();
-  console.log("Main loading state " , isLoading);
-  
-  const [selectedTodo, setSelectedTodo] = useState<TodoItem | null>(null);
+  const { todos, deleteTodo } = useTodos();
+  const navigate = useNavigate();
   const [todoToDelete, setTodoToDelete] = useState<TodoItem | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const {
-    todos,
-    loading,
-    error,
-    saveTodo,
-    deleteTodo,
-    totalCount,
-  } = useTodos();
 
-
-  const handleAddNew = () => {
-    setSelectedTodo(new TodoItem({ ownerId: user?.id })); // empty TodoItem
+  const handleEditClick = (id: string) => {
+    navigate(`/app/todos/${id}/edit`);
   };
-
-  const handleCancel = () => {
-    setSelectedTodo(null); // hide form
-  };
-
-  const handleSave = async (todo: TodoItem) => {
-    await saveTodo(todo);
-    setSelectedTodo(null); // close form
-  };
-
   const confirmDelete = async () => {
     if (todoToDelete) {
       await deleteTodo(todoToDelete);
@@ -55,7 +36,7 @@ const TodosPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <>
       <ConfirmDialog
         isOpen={isConfirmOpen}
         title="Confirm Delete"
@@ -63,64 +44,47 @@ const TodosPage = () => {
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />
-
-      <div className="max-w-7xl mx-auto">
-        {/* Page Header */}
-        <div className="mb-8 text-center sm:text-left">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My To-dos</h1>
+      <Box
+        sx={{
+          px: 3,
+          py: 4,
+          width: "100%",
+          maxWidth: "1200px",
+          mx: "auto",
+        }}
+      >
+        {/* Section Header */}
+        <div className="flex justify-between">
+          <Typography variant="h4" gutterBottom>
+            My Todos
+          </Typography>
+          {/* Add New */}
+          <Button
+            onClick={() => navigate("/app/todos/create")}
+            variant="contained"
+            color="primary"
+            sx={{ mb: 3 }}
+          >
+            <AddCircleIcon />
+            <Typography padding="0.5vw">Add New Todo</Typography>
+          </Button>
         </div>
-
-        {/* Stats/Summary Bar (optional) */}
-        <div className="bg-white shadow rounded-lg p-4 mb-8 flex flex-wrap justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium text-gray-500">
-              Total Tasks:
-            </span>
-            <span className="text-lg font-semibold text-blue-600">
-              {totalCount}
-            </span>
-          </div>
-          <div className="flex space-x-4">
-            <button 
-            onClick={handleAddNew}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Add New Task
-            </button>
-            <button className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md hover:bg-gray-50 transition-colors">
-              Filter
-            </button>
-          </div>
-        </div>
-        {error && (
-          <div className="row">
-            <div className="card">
-              <section>
-                <p>
-                  <span>{error}</span>
-                </p>
-              </section>
-            </div>
-          </div>
+        {/* Filter Pannel */}
+        {todos && <TodoFilterPanel />}
+        {/* Todos List */}
+        {todos ? (
+          <TodosList
+            todos={todos}
+            onEdit={handleEditClick}
+            onDelete={requestDelete}
+          />
+        ) : (
+          <Typography>
+            You don't have any Todos. Let's start by adding a new todo.
+          </Typography>
         )}
-        {selectedTodo && (
-          <div>
-            <TodoForm
-              todo={selectedTodo}
-              onSave={handleSave}
-              onCancel={handleCancel}
-            />
-          </div>
-        )}
-        <TodosList onSave={saveTodo} todos={todos} onDelete={requestDelete} />
-        {loading && (
-          <div>
-            <span className="animate-spin"></span>
-            <p>Loading...</p>
-          </div>
-        )}
-      </div>
-    </div>
+      </Box>
+    </>
   );
 };
 export default TodosPage;
