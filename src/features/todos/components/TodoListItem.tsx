@@ -11,10 +11,11 @@ interface TodoProps {
   todo: TodoItem;
   onEdit: () => void;
   onDelete: () => void;
+  onToggleStatus: (todo: TodoItem, newStatus: boolean) => void;
 }
 
 const TodoListItem = (props: Readonly<TodoProps>) => {
-  const { todo, onEdit, onDelete } = props;
+  const { todo, onEdit, onDelete, onToggleStatus } = props;
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -51,6 +52,7 @@ const TodoListItem = (props: Readonly<TodoProps>) => {
 					<Switch
 					checked={todo.isComplete}
 					color={todo.isComplete? "success" : "warning"} 
+					onChange={(e) => onToggleStatus(todo, e.target.checked)} 
 					/>
 				}
 				label={todo.isComplete? "Completed" : "Pending"} 

@@ -4,9 +4,11 @@ import { TodoItem } from "../models/TodoItem";
 import { useUser } from "../../auth/context/UserContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { toast } from "react-toastify";
+import { FilterState } from "../models/FilterState";
 
 
-export const useTodos = () => {
+
+export const useTodos = (filters: FilterState) => {
     const {getAccessTokenSilently} = useAuth0();
     const { user, isLoading: userLoading } = useUser();
     const [todos, setTodos] = useState<TodoItem[]>([]);
@@ -23,7 +25,7 @@ export const useTodos = () => {
                 setLoading(true);
                 try {
                     const accessToken = await getAccessTokenSilently();
-                    const data = await getTodos(user.id.toString(), accessToken);
+                    const data = await getTodos(user.id.toString(), accessToken, {...filters});
                     setTotalCount(data.totalCount);
                     const items = data.items.map((item: unknown) => new TodoItem(item))
                     if (currentPage === 1) {
@@ -42,7 +44,7 @@ export const useTodos = () => {
             }
         };
         loadTodos();
-    }, [currentPage, getAccessTokenSilently, setTodos, user, userLoading]);
+    }, [currentPage, getAccessTokenSilently, setTodos, user, userLoading, filters]);
 
     const saveTodo = async (todo : TodoItem) => {
         setSaving(true);

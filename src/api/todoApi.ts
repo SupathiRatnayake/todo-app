@@ -1,6 +1,8 @@
 import axios from "axios";
 import { TodoItem } from "../features/todos/models/TodoItem";
 import { PagedResult } from "../features/todos/models/PagedResult";
+import { FilterState } from "../features/todos/models/FilterState";
+
 
 const API_BASE_URL = 'https://localhost:7042/api/Todo'; // Configure later with env
 
@@ -10,11 +12,18 @@ const API_BASE_URL = 'https://localhost:7042/api/Todo'; // Configure later with 
  * @param token Access token from Auth0
  * @returns Todos list from backend
  */
-export async function getTodos(userId : string, accessToken: string): Promise<PagedResult<TodoItem>> {
-    const response = await axios.get(`${API_BASE_URL}`, {
-        params: {
-            userId: userId,
-        },
+export async function getTodos(userId : string, accessToken: string, filters: FilterState): Promise<PagedResult<TodoItem>> {
+    const params = new URLSearchParams();
+    params.append("userId", userId);
+    if (filters.search) params.append("searchtext", filters.search);
+    if (filters.status !== "all") params.append("isComplete", (filters.status === "completed").toString()); // sets isComplete to true if value is "completed" or else false
+    if (filters.dueDate) {
+        const normalizedDate = normalizeToUTC(filters.dueDate);
+        params.append("dueDate", normalizedDate);
+
+    }
+    if (filters.isDeleted !== undefined) params.append("isDeleted", filters.isDeleted.toString());
+    const response = await axios.get(`${API_BASE_URL}?${params.toString()}`, {
         headers : {
             Authorization: `Bearer ${accessToken}`,
         }
@@ -68,4 +77,9 @@ export async function upsertTodo(todoItem: TodoItem, accessToken: string): Promi
     });
     
     return response.data.data;   // Data has nested data json, but has issue accessing
+}
+
+const normalizeToUTC = (date: Date) => {
+    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    return utcDate.toISOString().slice(0, 10);
 }
