@@ -5,8 +5,8 @@ import { useTodos } from "../hooks/todoHooks";
 import {
   Box,
   Button,
-  Checkbox,
   FormControlLabel,
+  Switch,
   TextField,
 } from "@mui/material";
 import ConfirmDialog from "./ConfirmDialog";
@@ -49,7 +49,13 @@ const TodoForm = ({ todo: initialTodo }: TodoFormProps) => {
     navigate(-1);
   };
 
-  const handleCancel = () => setIsConfirmOpen(true);
+  const handleCancel = () => {
+    if (todo === initialTodo) {
+      cancelEdit();
+    } else {
+      setIsConfirmOpen(true);
+    }
+  };
   const cancelEdit = () => navigate(-1);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,7 +92,12 @@ const TodoForm = ({ todo: initialTodo }: TodoFormProps) => {
       <Box
         component="form"
         onSubmit={handleSubmit}
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          width: "80%",
+        }}
       >
         <TextField
           required
@@ -111,7 +122,6 @@ const TodoForm = ({ todo: initialTodo }: TodoFormProps) => {
             String(todo.dueDate.getDate()).padStart(2, "0")
           }
           onChange={handleChange}
-          fullWidth
         />
         <TextField
           name="description"
@@ -121,11 +131,13 @@ const TodoForm = ({ todo: initialTodo }: TodoFormProps) => {
           onChange={handleChange}
           fullWidth
           multiline
+          rows={4}
         />
         <FormControlLabel
           label="Completed?"
+          labelPlacement="start"
           control={
-            <Checkbox
+            <Switch
               name="isComplete"
               checked={todo.isComplete}
               onChange={handleChange}

@@ -4,3 +4,7 @@
 @import '@fontsource/roboto/500.css';
 @import '@fontsource/roboto/700.css';
 
+body {
+    margin: 0;
+    padding: 0;
+}

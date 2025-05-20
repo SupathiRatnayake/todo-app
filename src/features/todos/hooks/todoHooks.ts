@@ -8,7 +8,7 @@ import { FilterState } from "../models/FilterState";
 
 
 
-export const useTodos = (filters: FilterState) => {
+export const useTodos = (filters?: FilterState) => {
     const {getAccessTokenSilently} = useAuth0();
     const { user, isLoading: userLoading } = useUser();
     const [todos, setTodos] = useState<TodoItem[]>([]);
@@ -25,7 +25,13 @@ export const useTodos = (filters: FilterState) => {
                 setLoading(true);
                 try {
                     const accessToken = await getAccessTokenSilently();
-                    const data = await getTodos(user.id.toString(), accessToken, {...filters});
+                    const defaultFilters: FilterState = {
+                        search: "",
+                        status: "all",
+                        dueDate: null,
+                    }
+                    const mergedFilters = { ...defaultFilters, ...filters};
+                    const data = await getTodos(user.id.toString(), accessToken, {...mergedFilters});
                     setTotalCount(data.totalCount);
                     const items = data.items.map((item: unknown) => new TodoItem(item))
                     if (currentPage === 1) {
@@ -102,6 +108,30 @@ export const useTodos = (filters: FilterState) => {
         }
     };
 
+    const restoreTodo = async (todo : TodoItem) => {
+        setSaving(true);
+        try {
+            const updatedTodo = await upsertTodo({
+                ...todo,
+                isDeleted: false,
+            }, (await getAccessTokenSilently()).toString());
+            // Remove the deeted todoItem from list
+            const updatedTodos = todos.filter(t => t.id !== updatedTodo.id);
+            setTodos(updatedTodos);
+            toast.success('Todo deleted successfully');
+
+        } catch (error) {
+            console.error('Failed to save Todo', error);
+            if (error instanceof Error) {
+                setSavingError(error.message);
+            }
+            toast.error('Failed to delete Todo!');
+
+        } finally {
+            setSaving(false);
+        }
+    };
+
     return {
         todos,
         loading,
@@ -113,5 +143,6 @@ export const useTodos = (filters: FilterState) => {
         saveTodo,
         deleteTodo,
         totalCount,
+        restoreTodo
     };
 }

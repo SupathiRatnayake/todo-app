@@ -23,7 +23,6 @@ const TodoFormPage = () => {
         const todo = new TodoItem(data);
         setTodo(todo);
         console.log(todo);
-        
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
@@ -52,7 +51,22 @@ const TodoFormPage = () => {
   }
 
   return (
-    <Box>
+    <Box
+      sx={{
+        px: 3,
+        py: 4,
+        width: "100%",
+        maxWidth: "1200px",
+        mx: "auto",
+      }}
+    >
+      {/* Section Header */}
+      <div className="flex justify-between">
+        <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+          Create New
+        </Typography>
+      </div>
+      {/* Todos Form */}
       <TodoForm todo={todo} />
     </Box>
   );

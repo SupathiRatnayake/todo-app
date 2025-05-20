@@ -1,5 +1,6 @@
 import { Box, List, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useNavigate } from "react-router-dom";
 
 const Navigation = () => {
@@ -24,6 +25,14 @@ const Navigation = () => {
                     </ListItemIcon>
                     <ListItemText primary="Todos" />
                 </ListItemButton>
+
+                <ListItemButton onClick={() => navigate("/app/recycle_bin")}>
+                    <ListItemIcon>
+                        <DeleteOutlineOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Deleted todos" />
+                </ListItemButton>
+
             </List>
 
         </Box>

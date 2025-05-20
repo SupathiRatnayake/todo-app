@@ -6,6 +6,8 @@ import ProfilePage from "../pages/ProfilePage";
 import UserCard from "../features/auth/components/UserCard";
 import UserForm from "../features/auth/components/UserForm";
 import TodoFormPage from "../pages/TodoFormPage";
+import RecycleBinPage from "../pages/RecycleBinPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
 	{
@@ -14,7 +16,11 @@ const router = createBrowserRouter([
 	},
     { 
         path: "/app",
-        element: <Layout />,
+        element: (
+        <ProtectedRoute>
+            <Layout />
+        </ProtectedRoute>
+    ),
         children: [
             { 
                 path: "todos", 
@@ -24,7 +30,11 @@ const router = createBrowserRouter([
                     { path: ":id/edit", element: <TodoFormPage />},
                 ],
 
-            },	// todo protect
+            },
+            {
+                path: "recycle_bin",
+                element: <RecycleBinPage />
+            },
             { 
                 path: "profile", 
                 element: <ProfilePage />,
@@ -32,7 +42,7 @@ const router = createBrowserRouter([
                     { index: true, element: <UserCard /> },
                     { path: "create", element: <UserForm /> },
                 ], 
-            },	// todo protect
+            },
         ]
     },
 ]);

@@ -10,7 +10,7 @@ const API_BASE_URL = 'https://localhost:7042/api/Users'; // Configure later with
  * @returns User instance from backend
  */
 export async function getUserFromBackend(email: string, token: string): Promise<User> {
-    const response = await axios.post(`${API_BASE_URL}/getuser`, { email },{
+    const response = await axios.post(`${API_BASE_URL}/get-by-email`, { email },{
         headers: 
         { 
             Authorization: `Bearer ${token}`

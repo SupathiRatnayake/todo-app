@@ -46,7 +46,13 @@ const HomePage = () => {
   }
 
   return (
-    <Container maxWidth="xl">
+    <Container 
+    disableGutters
+    sx={{ 
+      minWidth: "100%",
+      minHeight: "100vh",
+      backgroundImage: "url('../../public/landing_bg.jpg')", 
+      }}>
       <header className="w-full bg-white text-white py-1 shadow-md">
         <div className="px-4 py-0 flex items-center justify-between">
           {/* Logo */}
@@ -60,32 +66,55 @@ const HomePage = () => {
         </div>
       </header>
       <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignContent="center"
-        paddingY="10vw"
+      sx={{
+        marginTop: "5vw",
+        paddingTop: "vw",
+        alignItems: "center",
+        justifyContent: "center",
+        
+      }}
       >
-        <Typography variant="h3" gutterBottom>
-          Welcome! Let's get productive!
-        </Typography>
-        <Typography variant="h6" gutterBottom color="text.secondry">
-          Stay organized, focused, and get things done with ease.
-        </Typography>
-        {!isAuthenticated && (
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => loginWithRedirect()}
-            sx={{ 
-              mt: 4, 
-              width: "34vw"
-            }}
+        <Box
+          display="flex"
+          flexDirection="column"
+          paddingY="10vw"
+          width="50%"
+          margin="auto"
+          alignContent="center"
+          alignItems="center"
+          bgcolor="white"
+        >
+          <Typography 
+          fontFamily="sans-serif"
+          textAlign="center" 
+          variant="h2" 
+          gutterBottom>
+            Welcome! Let's get productive!
+          </Typography>
+          <Typography
+            textAlign="center"
+            variant="h4"
+            gutterBottom
+            color="text.secondry"
           >
-            Get Started
-          </Button>
-        )}
+            Stay organized, focused, and get things done with ease.
+          </Typography>
+          {!isAuthenticated && (
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => loginWithRedirect()}
+              sx={{
+                mt: 4,
+                width: "34vw",
+                fontSize: "1.7vw",
+              }}
+            >
+              Get Started
+            </Button>
+          )}
+        </Box>
       </Box>
     </Container>
   );
