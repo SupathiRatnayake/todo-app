@@ -1,4 +1,4 @@
-import { TodoItem } from "../models/TodoItem";
+import { TodoItem } from "./TodoItem";
 import TodoListItem from "./TodoListItem";
 import { Stack } from "@mui/material";
 

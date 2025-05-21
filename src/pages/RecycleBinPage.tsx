@@ -1,12 +1,12 @@
-import TodosList from "../features/todos/components/TodosList";
-import { useTodos } from "../features/todos/hooks/todoHooks";
+import TodosList from "../features/todos/TodosList";
+import { useTodos } from "../features/todos/todoHooks";
 import { Box, Typography } from "@mui/material";
-import TodoFilterPanel from "../features/todos/components/TodoFilterPanel";
+import TodoFilterPanel from "../features/todos/TodoFilterPanel";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { TodoItem } from "../features/todos/models/TodoItem";
-import ConfirmDialog from "../features/todos/components/ConfirmDialog";
-import { FilterState } from "../features/todos/models/FilterState";
+import { TodoItem } from "../features/todos/TodoItem";
+import ConfirmDialog from "../features/todos/ConfirmDialog";
+import { FilterState } from "../features/todos/FilterState";
 
 const RecycleBinPage = () => {
   const [filters, setFilters] = useState({
@@ -15,7 +15,7 @@ const RecycleBinPage = () => {
     dueDate: null,
     isDeleted: true,
   } as FilterState);
-  const { todos, saveTodo, deleteTodo, restoreTodo } = useTodos(filters);
+  const { todos, saveTodo, restoreTodo, permenantDeleteTodo } = useTodos(filters);
   const navigate = useNavigate();
   const [todoToDelete, setTodoToDelete] = useState<TodoItem | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -33,7 +33,7 @@ const RecycleBinPage = () => {
   };
   const confirmDelete = async () => {
     if (todoToDelete) {
-      await deleteTodo(todoToDelete);
+      await permenantDeleteTodo(todoToDelete.id);
     }
     setTodoToDelete(null);
     setIsConfirmOpen(false);

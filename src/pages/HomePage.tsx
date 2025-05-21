@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../features/auth/context/UserContext";
+import { useUser } from "../features/auth/userHook";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import logo from "../../public/todo logo.png";
-import LoginButton from "../features/auth/components/LoginButton";
+import LoginButton from "../features/auth/LoginButton";
 
 const HomePage = () => {
   const {

@@ -1,7 +1,7 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TodoItem } from "../models/TodoItem";
-import { useTodos } from "../hooks/todoHooks";
+import { TodoItem } from "./TodoItem";
+import { useTodos } from "./todoHooks";
 import {
   Box,
   Button,

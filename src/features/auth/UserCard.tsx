@@ -1,4 +1,4 @@
-import { useUser } from '../context/UserContext';
+import { useUser } from "./userHook";
 
 export default function UserCard() {
   const { user, isLoading } = useUser();

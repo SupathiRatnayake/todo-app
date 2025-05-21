@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
-import TodoForm from "../features/todos/components/TodosForm";
-import { getTodoById } from "../api/todoApi"; // your API method
+import TodoForm from "../features/todos/TodosForm";
+import { getTodoById } from "../features/todos/todoApi"; // your API method
 import { useAuth0 } from "@auth0/auth0-react";
-import { TodoItem } from "../features/todos/models/TodoItem";
+import { TodoItem } from "../features/todos/TodoItem";
 
 const TodoFormPage = () => {
   const { getAccessTokenSilently } = useAuth0();

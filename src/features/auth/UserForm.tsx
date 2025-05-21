@@ -1,7 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useUserContext } from "../context/UserContext";
+import { useUserContext } from "./userHook";
 import React, { useState } from "react";
-import { createUser } from "../../../api/userApi";
+import { createUser } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import { Paper, Typography, Box, TextField, Button } from "@mui/material";
 

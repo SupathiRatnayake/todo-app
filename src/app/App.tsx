@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import './App.css';
-import { UserProvider } from '../features/auth/context/UserContext';
-import { Auth0ProviderWithConfig } from '../features/auth/services/auth0';
+import { UserProvider } from '../features/auth/UserProvider';
+import { Auth0ProviderWithConfig } from '../features/auth/auth0';
 import router from './Router';
 import { ToastContainer } from 'react-toastify';
 

@@ -13,7 +13,7 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PickerValue } from "@mui/x-date-pickers/internals";
-import { FilterState } from "../models/FilterState";
+import { FilterState } from './FilterState'
 
 type FilterProps = {
 	filters: FilterState;

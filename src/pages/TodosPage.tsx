@@ -1,13 +1,13 @@
-import TodosList from "../features/todos/components/TodosList";
-import { useTodos } from "../features/todos/hooks/todoHooks";
+import TodosList from "../features/todos/TodosList";
+import { useTodos } from "../features/todos/todoHooks";
 import { Box, Button, Typography } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import TodoFilterPanel from "../features/todos/components/TodoFilterPanel";
+import TodoFilterPanel from "../features/todos/TodoFilterPanel";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { TodoItem } from "../features/todos/models/TodoItem";
-import ConfirmDialog from "../features/todos/components/ConfirmDialog";
-import { FilterState } from "../features/todos/models/FilterState";
+import { TodoItem } from "../features/todos/TodoItem";
+import ConfirmDialog from "../features/todos/ConfirmDialog";
+import { FilterState } from "../features/todos/FilterState";
 
 const TodosPage = () => {
   const [filters, setFilters] = useState({

@@ -12,7 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CalendarMonth from "@mui/icons-material/CalendarMonth";
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
-import { TodoItem } from "../models/TodoItem";
+import { TodoItem } from "./TodoItem";
 import { useState } from "react";
 import clsx from "clsx";
 import { red } from "@mui/material/colors";

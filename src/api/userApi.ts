@@ -1,5 +1,5 @@
 import axios from "axios";
-import { User } from "../features/auth/models/User";
+import { User } from "../features/auth/User";
 
 const API_BASE_URL = 'https://localhost:7042/api/Users'; // Configure later with env
 

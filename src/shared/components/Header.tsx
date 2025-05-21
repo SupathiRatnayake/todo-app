@@ -1,5 +1,5 @@
-import LoginButton from "../../features/auth/components/LoginButton";
-import LogoutButton from "../../features/auth/components/LogoutButton";
+import LoginButton from "../../features/auth/LoginButton";
+import LogoutButton from "../../features/auth/LogoutButton";
 import logo from '../../../public/todo logo.png';
 
 const Header = () => {
